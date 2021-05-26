@@ -4,7 +4,7 @@
 
 \title{
     Playing Optimal Go Endgames with Combinatorial Game Theory \\
-    \large
+    \large Outline
 }
 \date{}
 \author{Anders Poirel | apoirel@ucsc.edu}
@@ -23,5 +23,86 @@
     levels of (human) play, using results from combinatorial game theory can have a 
     noticeable impact on one's odds of winning 
 \end{abstract}
+
+\tableofcontents
+
+\section{Game of Go}
+
+\subsection{Background}
+
+\subsection{Rules of Go}
+Review of the American Go Association rules for the game. 
+Why the traditional japanese rules leave ambiguities making the 
+mathematical analysis of the game 
+
+\section{Combinatorial Game Theory for Go}
+
+This sections goes over a few fundamental concepts of combinatorial game 
+theory, illustrating each with examples of Go. Concepts that do not apply 
+to the analysis of go endgames (e.g. cardinal numbers) are glossed over.
+
+\subsection{Basic Concepts}
+Review of Conway's definition of Game. Fundamental structures and 
+concepts
+
+\subsubsection{Mathematical Re-formulation of Rules of Go}
+Detail on how this definition is a natural fit for the Game of go. 
+Re-formulation of rules of game for more convenient analysis 
+(while showing their quasi-equivalence with AGA rules). 
+
+\subsection{Conway Induction}
+Fundamental theorems. Conway induction as the main tool of proof in the 
+theory
+
+\subsection{Arithmetic of Games}
+Games as an algebraic group/ring/field. Illustration of the additive 
+structure of the game of Go
+
+\subsection{Simplifying Games}
+
+Some useful theorems that can be used to simplify positions 
+
+\subsection{Surreal Numbers}
+The next two subsections explore some sub-classes of Conway Numbers 
+(also known as surreal numbers) and how they can be used to evaluate 
+certain moves in Go.
+
+\subsubsection{Integers and Fractions}
+
+Integers as finished game in normal rules. Fractional point value 
+of endgame plays.
+
+\subsubsection{Inifinitesimals}
+
+Infinitesimals as moves with smaller than fractional value. 
+Preview of the concept of chilling.
+
+\section{Optimal Go Endgame Strategy}
+
+This section uses concepts from the previous section to derive exact 
+results for optimal play in the endgame.
+
+\subsection{Endgame Positions}
+Type of positions where the theory is useful in deriving exact results.
+
+\subsection{Chilling}
+Concepts of chilling and ``hot'' moves.
+
+\subsection{Corridors}
+Solving positions involving simple shapes.
+
+\subsection{More Complicated Shapes}
+Examples of applications of the theory to solving endgame positions 
+involving more complex shapes. 
+
+\section{Conclusion}
+Advantages of the theory over other approaches such as naive tree search and machine 
+learning for, especially from a tractability/exactness perspective. Limits of the
+theory (e.g. positions involving KOs), and directions for future reading. 
+Some important open research problems in the theory of Go. 
+
+\bibliographystyle{ieeetran}
+
+\bibliography{references}
 
 \end{document}

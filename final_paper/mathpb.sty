@@ -1,0 +1,53 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{mathpb}
+
+% common imports
+\RequirePackage{amsmath}
+\RequirePackage{amsthm}
+\RequirePackage{amssymb}
+\RequirePackage{amsfonts}
+
+% shortcuts for important sets 
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Ha}{\mathbb{H}}
+
+%% set theory 
+\DeclareMathOperator{\card}{card}
+
+%%  number theory
+\DeclareMathOperator{\lcm}{lcm}
+
+%% algebra
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\Id}{Id}
+\DeclareMathOperator{\Inv}{Inv}
+\DeclareMathOperator{\Norm}{Norm}
+
+%% linear algebra
+\DeclareMathOperator{\Null}{null}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\Range}{range}
+\newcommand{\innerp}[2]{\langle #1, #2\rangle}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+%% analysis
+
+% more readable symbols for real and imaginary
+\DeclareMathOperator{\Rea}{Re}
+\DeclareMathOperator{\Ima}{Im}
+% faster conjugate
+\newcommand{\conj}[1]{\overline{#1}}
+
+% optimization
+\DeclareMathOperator{\argmin}{argmin}
+\DeclareMathOperator{\argmax}{argmax}
+
+% faster limits
+\newcommand{\limto}[2]{\lim_{#1 \rightarrow #2}}
+
+% faster sequences
+\newcommand{\seq}[2]{\left\{#1\right\}_{#2 \in \N}}

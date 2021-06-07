@@ -1,4 +1,4 @@
-\documentclass[../math_194_paper.tex]{subfiles}
+\documentclass[../math194_paper.tex]{subfiles}
 
 \begin{document}
 
@@ -7,41 +7,121 @@
 This sections goes over a few fundamental concepts of combinatorial game 
 theory, illustrating each with examples of Go. Concepts that do not apply 
 to the analysis of go endgames (e.g. cardinal numbers) are glossed over.
+We follow broadly the approach of \cite{schleicher2006introduction}, starting 
+with \textit{games} as the fundamental structure and only introducing 
+\textit{numbers} later.
 
 \subsection{Basic Concepts}
-Review of Conway's definition of Game. Fundamental structures and 
-concepts
+
+\begin{definition}[Game] 
+    A \textit{game} is defined recursively as follows:
+    \begin{itemize}
+        \item[(1)] Let $L$, $R$ be two sets of game. Then ordered pair $G = (L, R)$ is a 
+        game  
+        \item[(2)] (Descending Game Condition) There is no infinite sequence of games  
+        $G^i = (L^i, R^i)$ with $G^{i+1} \in L^i \cup R^i$ for all $i \in \N$
+    \end{itemize}
+\end{definition}
+The elements of $L$ and $R$ in the above are called the \textit{left} a and \textit{right options}
+of $G$ respectively. \\
+Many sources such as \cite{berlekamp1994mathematical} write $\{L \mid R\}$ for the ordered pair 
+$(L,R)$. 
 
 \subsubsection{Mathematical Re-formulation of Rules of Go}
 Detail on how this definition is a natural fit for the Game of go. 
-Re-formulation of rules of game for more convenient analysis 
-(while showing their quasi-equivalence with AGA rules). 
+Re-formulation of rules of game for more convenient analysis.
+
+The concept of \textit{numbers} will make this correspondence even simpler.
+
 
 \subsection{Conway Induction}
-Fundamental theorems. Conway induction as the main tool of proof in the 
-theory
+
+The following theorem presents gives a form of induction on games. 
+This has applications to almost every result in the theory, since most 
+proofs rely on being able to manipulate the recursive structure of games.
+
+\begin{theorem}[Conway Induction]
+\label{induction}
+For $n \geq 1$ let $P(G_1, \ldots, G_n)$ be some property of a $n$-tuple of games 
+For all $i \in \{1, \ldots n\}$ suppose $P(G_1, \ldots, G_i', \ldots, G_n)$ implies 
+$P(G_1, \ldots, G_i, \ldots, G_n)$. Then $P(G_1, \ldots, G_n)$ holds for any $n$-tuple 
+of games.
+\end{theorem}
+
+\begin{proof}
+    A contradiction, since by the Descending Game Condition no such infinite sequence 
+\end{proof}
+
+It can be shown that Conway Induction implies the Descending Game Condition \cite{schleicher2006introduction}
+As such, they are equivalent.
 
 \subsection{Arithmetic of Games}
 Games as an algebraic group/ring/field. Illustration of the additive 
 structure of the game of Go
 
-\subsection{Simplifying Games}
 
-Some useful theorems that can be used to simplify positions 
+Other operations besides addition and negation can be defined on some 
+classes of games (in particular, the class of game introduced in the next section, 
+\textbf{numbers}, forms a field \cite{schleicher2006introduction}),
+ but these two operations are the only ones we require in this study of Go endgames. 
 
 \subsection{Surreal Numbers}
-The next two subsections explore some sub-classes of Conway Numbers 
-(also known as surreal numbers) and how they can be used to evaluate 
-certain moves in Go.
 
-\subsubsection{Integers and Fractions}
+\subsubsection{Integers} 
 
-Integers as finished game in normal rules. Fractional point value 
-of endgame plays.
+\subsubsection{Relating the Mathematical Game to the Real Game}
+
+Equipped with the notion of integers, it is possible to clarify the relation 
+between the ``mathematical'' rules of Go presented above and the standard AGA 
+rules.
+
+\subsubsection{Fractions}
+
+The applications of fractions to Go will become clear once we introduce 
+the chilling and warming operators to study endgame positions. 
+
+Arbitrary real numbers can then be constructed as such using fractions.
+TODO: show example. 
+However, these do not show up in the endgame analysis 
+techniques discussed here.
 
 \subsubsection{Inifinitesimals}
 
 Infinitesimals as moves with smaller than fractional value. 
-Preview of the concept of chilling.
+
+John H. Conway's theory of surreal numbers also includes \textbf{ordinal numbers} 
+\cite{schleicher2006introduction}. However, while these do not show either in the analysis 
+of Go endgames, it is interesting to note that surreal numbers provide a unified 
+framework for treating infinitesimals, real numbers and ordinal numbers, and that 
+Go endgame was the first motivator for the study of this class 
+(cf. \cite[Prologue]{conway2000numbers}).
+
+\subsection{Simplifying Games}
+
+This section presents several theorems for symplifying games that will be 
+useful in the proofs of several important results as well as in computing 
+values of endgames positions. 
+
+\begin{theorem}[Number Avoidance Theorem]
+    
+\end{theorem}
+
+\begin{theorem}[Deleting Dominated Options]
+    Let $G$ be a game with $G^L \in \mathcal{G}^L$ and $G^R \in \mathcal{G}^R$.
+    Then value of $G$ is unchanged if options of $\mathcal{G}^L$ dominated by $G^L$
+    are removed. Similarly, the value of $G$ is unchanged if options of $\mathcal{G}^R$ 
+    which are dominated by $G^R$ are removed. 
+\end{theorem}
+
+\begin{proof}
+    A similar argument holds for removing dominated right options of $G$ \qed
+\end{proof}
+
+\begin{theorem}[Bypassing Reversible Options]
+\end{theorem}
+
+\begin{proof}
+
+\end{proof}
 
 \end{document}

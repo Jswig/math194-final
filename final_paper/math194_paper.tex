@@ -1,20 +1,30 @@
 \documentclass{article}
 
-\usepackage{amsmath}
-\usepackage{amssymb}
+\usepackage{mathpb} % custom mathematics package including AMSmaths/fonts
+
+\usepackage{amsrefs}
 \usepackage{tikz}
 \usepackage{hyperref}
 \usepackage{subfiles}
 
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}{Lemma}[theorem]
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
 \hypersetup{linktoc=all}
 
 \title{Playing Optimal Go Endgames with Combinatorial Game Theory}
-\author{Anders Poirel \\ apoirel@ucsc.edu}
-\date{}
+\author{Anders Poirel - apoirel@ucsc.edu \\ University of California, Santa Cruz}
+\date{Spring 2021}
 
 \begin{document}
 
 \maketitle
+
 \begin{abstract}
     Combinatorial game theory studies deterministic, perfect-information 
     games with guaranteed termination. As a perfect-information, symmetric 
@@ -26,7 +36,17 @@
     noticeable impact on one's odds of winning 
 \end{abstract}
 
+\newpage
 \tableofcontents
+\newpage 
+
+\section{Introduction}
+
+This seeks a balance 
+by introducing illustrating the fundamental concepts of the theory immediately 
+with Go positions. I hope to convey how the theory naturally emerges from the rules 
+of Go, despite being applicable to a much wider variety of two-player deterministic
+games. 
 
 \subfile{sections/game}
 
@@ -35,5 +55,7 @@
 \subfile{sections/endgame}
 
 \subfile{sections/conclusion}
+
+\bibliography{references}
 
 \end{document}

@@ -1,0 +1,350 @@
+\documentclass[../math194_paper.tex]{subfiles}
+
+\begin{document}
+
+\subsection{Surreal Numbers}
+
+Games whose right options are greater than their left options, such that this property holds recursively
+for all options, are called \textit{numbers}, or more often, \textit{surreal numbers}, following
+Knuth's treatment of the topic \cite{knuth1974surreal}. Formally,
+\begin{definition}[Number]
+    A game $G = \{\mathcal{G}_L \mid \mathcal{G}_R \}$ is a \textit{number}
+    if $G_L < G_R$, and $G_L, G_R$ are numbers for all $G_L \in \mathcal{G}_L, G_R \in \mathcal{G}_R$.
+\end{definition}
+Rather than discussing surreal numbers in full generality, we will limit ourselves 
+to constructing the surreal numbers that appear in our analysis of Go endgames.
+
+\subsubsection{Integers} 
+\begin{definition}[Natural Numbers]. A \textit{natural number} is defined a one of
+\begin{enumerate}
+    \item  $0 := \{ \emptyset \mid \emptyset \}$
+    \item  $n := \{ (n-1) \mid \emptyset \}$
+\end{enumerate}
+\end{definition}
+It is easy to see that $n+1 > n$.
+Using this fact, notice how by adding dominated options (which from the theorem does not affect the equality), 
+$\{ n\mid \} = \{ n-1, n \mid \} = \ldots \{ 1, 2, \ldots, n-1, n\mid \}$ which
+yields the standard Von Neumann construction of the natural numbers \cite[\S 4]{enderton1977elements}
+\cite[\S 2]{schleicher2006introduction}. 
+Thus, all of the usual properties of natural numbers apply to this construction.
+
+\begin{definition}[Negative Integers] A \textit{negative integer} is obtained by taking the 
+negative (as defined in \S 2.2) of a natural number. i.e. for $n$ a natural number,
+\[ (-n) := - \{n-1 \mid \} = \{ \mid -(n-1)\} \]
+\end{definition}
+These negative integers behave as expected, for instance, $n + (-n) = 0$ by Theorem \ref{reflexequal}
+and the usual arithmetic properties can be derived by applying negation and distributing over the
+corresponding identities using Theorem \ref{additionprop}. \\
+
+Positive integers $n$ are games in which Left has $n$ ``free'' moves and
+always wins: a move by left on $3 = \{2 \mid \}$ yields the new game $2 = \{1 | 0\}$ and so on.
+Similarly, negative integers $n$ are games in which Right has $n$ ``free'' moves and always 
+wins (in Go, replace Left and Right by White and Black, and ``free'' by ''legal'').
+
+\subsubsection{Integers and Mathematized Rules}
+
+Equipped with the notion of integers, we can further clarify the relation 
+between the ``mathematical'' rules of Go presented in \S and the standard AGA 
+rules. For instance, consider the following position
+\begin{figure}[H]
+\centering
+\begin{psgoboard*}[4]
+    \stone{black}{b}{1}
+    \stone{black}{b}{2}
+    \stone{black}{b}{3}
+    \stone{black}{b}{4}
+    \stone[\marklb{$\tau$}]{black}{a}{3}
+    \markpos{\marklb{A}}{a}{1}
+    \markpos{\marklb{B}}{d}{1}
+    \stone{white}{c}{1}
+    \stone{white}{c}{2}
+    \stone{white}{c}{3}
+    \stone{white}{c}{4}
+    \stone[\marklb{$\tau$}]{white}{d}{2}
+\end{psgoboard*}
+\end{figure}
+First, the half of the board $A$ is equal to 3: it is a game where Black can make 
+3 legal moves.  If White were to play anywhere in that era, Black capture in one move, 
+which recovers an extra legal move (returning the prisoner), which yields a new 
+game where Black has $3$ moves. 
+Similarly, side $B$ is equal to -3. 
+
+Therefore, a real-world game will usually end once both players recognize that all the
+subpositions are equal to integers. The score for Black is then the sum of all the 
+positive integer subpositions, and the score for White is the absolute value of the 
+sum of all the negative integer subpositions. \\
+
+Note an inexperienced player could play badly and lose such territories, but 
+remember that results for the values and order of a game are results for optimal play!
+
+Using these facts about numbers, combined with Theorems \ref{equivalence} and 
+\ref{canonical}, we can treat use Black  (resp. White) points and positive (resp. negative) 
+integers interchangeably when analyzing subpositions.
+
+\subsubsection{Rationals}
+
+\begin{definition}[Dyadic Rational] Let $m$ be an odd natural number, and $k$ be a natural 
+number. Define \footnote{This construction is slightly cumbersome; this is because 
+here we did show how to define a field on surreal numbers with a division operator.
+Such an approach would make for a lengthy digression from the main results relevant 
+to Go}
+\begin{itemize}
+    \item $\frac{1}{2} := \{0 \mid 1\}$; \quad  $\frac{0}{2^k} := 0$ 
+    \item for $m-1 \neq 0$, $\frac{m}{2^k} := \left\{ \frac{m-1}{2^k} \Bigg| \frac{m+1}{2^k} \right\}$
+\end{itemize}
+\end{definition}
+
+It is easy to verify that these behave as expected. For instance, 
+\[
+    \frac{1}{2} + \frac{1}{2} = \{0|1\} + \{0|1\} = \{0||0|\} + \{0||0|\} = 
+    \left\{ 0 + \{0||0|\} |  \{0|\} + \{0||0|\} \right\} = \{0|\} = 1
+\]
+Negative fractions are obtained in the same way as negative integers.
+For more details, see \cite[\S 0, \S 1]{conway2000numbers}.
+These dyadic rationals will be used to evaluate moves which change the value of a game of Go by less than 
+a full point.
+
+\subsubsection{Infinitesimals} \label{infinitesimals}
+
+Infinitesimals are a special type of game. They will correspond in Go to positions 
+that have smaller value than fractions, but are still different from zero games.  
+\begin{definition}[Useful Infinitesimals]
+\begin{itemize} \label{basic_infinitesimals} \:
+    \item $* := \{0 | 0 \}$
+    \item $\uparrow := \{0 | * \}$
+    \item $\downarrow := - \uparrow$
+\end{itemize}
+
+\begin{definition} \label{derived_infinitesimals} \:
+\begin{itemize}
+    \item $n \uparrow := \underbrace{\uparrow + \ldots + \uparrow}_{n \text{ times}}$
+    \item $\Uparrow := \uparrow + \uparrow$
+    \item $x* := x + *$
+\end{itemize}
+\end{definition}
+\end{definition}
+
+Unlike integers, these new numbers do not usually appear in the standard Go game. Instead, they 
+make their appearance when we play the \textit{chilled game}. In the chilled game, the moving 
+player must give a stone as a prisoner to their opponent - that is, a move effectively costs a 
+point. The motivation for the chilled game will be made clearer in \S 4.\\
+
+To simplify notation of chilled games, we will introduce the idea of \textit{markings} following 
+\cite{berlekamp1994mathematical}. A filled square indicates a Black prisoner for White, and 
+a empty square a White prisoner for Black. When a player moves, they either add a marking of
+their color to the board, or remove one of the opponent's color (these both reduce that player's
+net advantage by 1 point). \\
+
+Consider the following position in a chilled game:
+\begin{figure}[H]
+    \centering
+    \begin{psgopartialboard*}{(1,1)(4,3)}
+        \stone{black}{a}{1}
+        \stone{black}{b}{1}
+        \stone{black}{c}{1}
+        \stone{black}{d}{1}
+        \stone{black}{d}{2}
+        \stone{black}{d}{3}
+        \stone{black}{c}{3}
+        \stone{black}{b}{3}
+        \markpos{\marklb{A}}{b}{2}
+
+        \stone[\marklb{$\tau$}]{black}{a}{3}
+        \stone[\marklb{$\tau$}]{white}{a}{2}
+        \stone[\marksl]{white}{c}{2}
+    \end{psgopartialboard*}
+\end{figure}
+The options of Black and White on this position are respectively:
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\linewidth}
+    \centering
+    \begin{psgopartialboard*}{(1,1)(4,3)}
+        \stone{black}{a}{1}
+        \stone{black}{b}{1}
+        \stone{black}{c}{1}
+        \stone{black}{d}{1}
+        \stone{black}{d}{2}
+        \stone{black}{d}{3}
+        \stone{black}{c}{3}
+        \stone{black}{b}{3}
+        
+        \stone[\marksl]{black}{b}{2}
+        \stone[\marklb{$\tau$}]{black}{a}{3}
+        \stone[\marklb{$\tau$}]{white}{a}{2}
+        \stone[\marksl]{white}{c}{2}
+    \end{psgopartialboard*}
+    \caption{Black moves at A, capturing the white stone but adding a marking, which cancels out the gained 
+    point. Both players have 0 points, so this position is 0.}
+    \end{subfigure}
+    \quad
+    \begin{subfigure}[b]{0.45\linewidth}
+    \centering
+    \begin{psgopartialboard*}{(1,1)(4,3)}
+        \stone{black}{a}{1}
+        \stone{black}{b}{1}
+        \stone{black}{c}{1}
+        \stone{black}{d}{1}
+        \stone{black}{d}{2}
+        \stone{black}{d}{3}
+        \stone{black}{c}{3}
+        \stone{black}{b}{3}
+        
+        \stone{white}{b}{2}
+        \stone[\marklb{$\tau$}]{black}{a}{3}
+        \stone[\marklb{$\tau$}]{white}{a}{2}
+        \stone{white}{c}{2}
+    \end{psgopartialboard*}
+    \caption{White moves at A, saving the stone which Black threatened to capture, but removes 
+    a black marking in the process. Both players have 0 points, so this position is 0.}
+    \end{subfigure}
+\end{figure}
+Both the Left/Black and Right/White options are a 0 game. Thus this position is equal to $\{0 | 0\} = *$. \\
+
+\textbf{Note:} the positions shown above are not the only Go positions equal to * - they are only 
+one representative of the equivalence class of positions equal to *. For instance, any position 
+with a isolated White stone that can be captured by a group of \textit{alive} Black stones but which White 
+can save in one move by connected is equal to *. 
+Taking the negation of any such games (i.e. switching the colors) also yields a game in the same equivalence class. \\
+
+Similarly, $\uparrow$ also appears as a Go position in the chilled game:
+\begin{figure}[H]
+    \centering
+    \begin{psgopartialboard*}{(1,1)(5,3)}
+        \stone[\marklb{$\tau$}]{black}{a}{1}
+        \stone{black}{b}{1}
+        \stone{black}{c}{1}
+        \stone{black}{d}{1}
+        \stone{black}{e}{1}
+        \stone{black}{e}{2}
+        \stone{black}{e}{3}
+        \stone{black}{d}{3}
+        \stone{black}{c}{3}
+        \stone{black}{b}{3}
+        \stone{black}{a}{3}
+        
+        \stone[\marklb{$\tau$}]{white}{a}{2}
+        \stone[\marksl]{white}{d}{2}
+        \markpos{\marksl}{c}{2}
+     \end{psgopartialboard*}
+\end{figure}
+The options of Black and White in this position are respectively
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\linewidth}
+    \centering
+    \begin{psgopartialboard}{(1,1)(5,3)}
+        \stone[\marklb{$\tau$}]{black}{a}{1}
+        \stone{black}{b}{1}
+        \stone{black}{c}{1}
+        \stone{black}{d}{1}
+        \stone{black}{e}{1}
+        \stone{black}{e}{2}
+        \stone{black}{e}{3}
+        \stone{black}{d}{3}
+        \stone{black}{c}{3}
+        \stone{black}{b}{3}
+        \stone{black}{a}{3}
+        
+        \stone[\marksl]{black}{b}{2}
+        
+        \stone[\marklb{$\tau$}]{white}{a}{2}
+        \stone[\marksl]{white}{d}{2}
+        \markpos{\marksl}{c}{2}
+     \end{psgopartialboard}
+    \caption{Black's move at B2 secures two points of territory and a capture, but adds a marking
+    for a net of 0 points. This dominates the option of playing at C2, since it gives up a point
+    for territory for a net result of -1 points.}
+    \end{subfigure}
+    \quad
+    \begin{subfigure}[b]{0.45\linewidth}
+    \centering
+    \begin{psgopartialboard}{(1,1)(5,3)}
+        \stone[\marklb{$\tau$}]{black}{a}{1}
+        \stone{black}{b}{1}
+        \stone{black}{c}{1}
+        \stone{black}{d}{1}
+        \stone{black}{e}{1}
+        \stone{black}{e}{2}
+        \stone{black}{e}{3}
+        \stone{black}{d}{3}
+        \stone{black}{c}{3}
+        \stone{black}{b}{3}
+        \stone{black}{a}{3}
+        
+        \stone[\marklb{$\tau$}]{white}{a}{2}
+        \stone[\marksl]{white}{d}{2}
+        \stone{white}{b}{2}
+     \end{psgopartialboard}
+    \caption{White's move a B2 yields a position equal to *. This dominates the option of playing 
+    at C2, which allows Black to capture two piece with their next move at B2, for a net result 
+    of 1 point (in Black's favor.)}
+    \end{subfigure}
+\end{figure}
+This position is indeed equal to $\{0 | *\} = \uparrow$. $\downarrow$ is the same position with the colors reversed.
+Similarly, we can obtain $\Uparrow*$ by adding a empty intersection and and marking to the ``corridor'' represented 
+above, $3\uparrow$ by adding another empty intersections and marking, and so on.
+
+The following properties are useful in analyzing positions where infinitesimals appear.
+\begin{theorem}[Properties of Common Infinitesimals] \:
+    \begin{enumerate}
+        \item $* \parallel 0$
+        \item $*+*=0$, $*=-*$
+        \item $\uparrow > 0$
+        \item $\uparrow \parallel *$
+        \item $\Uparrow > *$
+        \item $n \uparrow > (n-1) \uparrow$
+    \end{enumerate}
+\end{theorem}
+These can easily be verified using the definitions. These results imply, for instance, that 
+a game with a net value of $5*$ yields a Go score of $4$ or $6$, depending on who plays first 
+(in effect, * is ``rounded'' up or down depending on who gets to play first). \\
+
+These properties should make it clear that $*$ in particular is a very different object than the 
+numbers we introduced previously.
+
+Next, notice that in positions such as $\Uparrow*$ (and all subsequent games obtained 
+by making longer ``corridors''), White has a much stronger incentive to play than 
+White/Right: Black's play to block off the corridor, moving the game down to 0, while 
+White's play moves the game down $\downarrow*$ in their favor. In effect, this means 
+that Black does not need to respond urgently to White plays in corridors, until 
+* is reached at which point they have increased incentive to respond to prevent White from connecting.
+\\
+
+Like for integers, using Theorems \ref{equivalence} and \ref{canonical} the infinitesimals 
+we just defined can be treated interchangeably with corresponding Go positions. \\
+
+
+Finally, to justify the name of infinitesimal, in nonstandard analysis, \textit{infinitesimals} are numbers
+which are different from zero, but small than all positive real numbers, but larger than any negative
+real numbers \cite{robinson2016non}. It can be easily verified that $* < \frac{1}{2^n}$ for $n \in \N$. 
+This also holds for $\uparrow$, and in fact $n \uparrow$.
+
+
+Conway also demonstrated in \cite[\S 0]{conway2000numbers} how to define any real number 
+and \textit{ordinal number}
+as a game (In some constructions, it is most natural to define infinitesimals and 
+ordinals in relation to each other). 
+However, while these do not show up in our analysis of Go endgames, 
+it is interesting to note that combinatorial games provide a unified
+framework for constructing infinitesimals, real numbers and ordinal numbers,
+and that Go endgames motivated the discovery of this approach. (cf. \cite[Prologue]{conway2000numbers}).
+
+\subsubsection{Playing with Numbers}
+
+\begin{theorem}[Number Avoidance Theorem]
+    \label{number_avoidance}
+    Let $G$ be a game that is not equal to a number, and $x$ a number. Consider
+    the game $G+x$. Then for both Left and Right making a move in $G$ is at 
+    least as good as making a move in $x$.
+\end{theorem}
+    This means that in general players should not move onto a number unless 
+    they have another option. This allows us to simplify games further. \\
+    
+    In terms of Go, some of the implications of this theorem are already known 
+    intuitively to competent players. In \S 3.6.2 we showed that integers correspond
+    to ``solid'' territory for one player. For instance, White should not want to 
+    play in ``solid'' territory for Black since their stones can always be captured by
+    Black's response. Black on the other hand should not play in their own territory, 
+    since they would be eating into their own free moves (or points). 
+\end{document}

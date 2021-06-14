@@ -2,133 +2,397 @@
 
 \begin{document}
 
-\section{Combinatorial Game Theory for Go}
-
-This sections goes over a few fundamental concepts of combinatorial game 
-theory, illustrating each with examples of Go. Concepts that do not apply 
-to the analysis of go endgames (e.g. cardinal numbers) are glossed over.
-We follow broadly the approach of \cite{schleicher2006introduction}, starting 
-with \textit{games} as the fundamental structure and only introducing 
-\textit{numbers} later.
+This section covers few fundamental concepts of combinatorial game 
+theory, illustrating each with examples of Go. Otherwise important concepts that 
+are not applicable to the techniques presented in this paper for the analysis of Go
+endgames are mostly omitted.
+This section follows closely the approach of \cite{schleicher2006introduction}, starting 
+with \textit{games} as the fundamental structure and only introducing \textit{numbers} as needed.
 
 \subsection{Basic Concepts}
 
-\begin{definition}[Game] 
-    A \textit{game} is defined recursively as follows:
-    \begin{itemize}
-        \item[(1)] Let $L$, $R$ be two sets of game. Then ordered pair $G = (L, R)$ is a 
-        game  
-        \item[(2)] (Descending Game Condition) There is no infinite sequence of games  
-        $G^i = (L^i, R^i)$ with $G^{i+1} \in L^i \cup R^i$ for all $i \in \N$
-    \end{itemize}
-\end{definition}
-The elements of $L$ and $R$ in the above are called the \textit{left} a and \textit{right options}
-of $G$ respectively. \\
-Many sources such as \cite{berlekamp1994mathematical} write $\{L \mid R\}$ for the ordered pair 
-$(L,R)$. 
+From the rules, it should be clear that we can fully describe a position of Go 
+by the moves available to each player. In turn, we can describe the resulting 
+position by the new moves available to each player and so on. Similarly, a 
+\textit{game} is defined as the set of moves available to the players called
+Left ($L $)and Right ($R$) respectively. Each of these moves is itself a game.
 
-For instance consider the following Go position. 
+\begin{definition}[Game] 
+    A \textit{game} is constructed recursively:
+    \begin{enumerate}
+        \item Let $\mathcal{G}_L$, $\mathcal{G}_R$ be two sets of game. Then the ordered pair 
+        $G = (\mathcal{G}_L,\mathcal{G}_R)$ is a game  
+        \item (Descending Game Condition) There is no infinite sequence of games  
+        $G^i = (\mathcal{G}_L^i,\mathcal{G}_R^i)$ with $G^{i+1} \in \mathcal{G}_L^i \cup \mathcal{G}_R^i$ for all $i \in \N$
+    \end{enumerate}
+\end{definition}
+
+The elements of $\mathcal{G}_L$ and $\mathcal{G}_L$ in the above are called the \textit{left} and \textit{right options}
+of $G$ respectively. Many sources such as \cite{berlekamp1994mathematical} write 
+$\{\mathcal{G}_L \mid \mathcal{G}_R \}$ for the ordered pair $(\mathcal{G}_L,\mathcal{G}_R)$. 
+For example, the simplest game we can define is the \textit{zero game} $(\emptyset, \emptyset)$ in which there are no left nor right options. When the set of Left or Right options is empty, we often prefer writing simply $\{|\}$. Furthermore, we cam
+for multiple nested games, we can write $\left\{A | \{B | C\} \right\}$ as 
+$A || B | C$
+
+The Descending Game Condition is added to ensure that a game terminates. Go does not violate 
+this condition since players will eventually run out of legal moves \footnote{this is slightly 
+cumbersome to show formally, but to see this, consider the fact that a non-capturing move reduces 
+the number of future legal moves},
+and the \textit{ko} rule prevents infinite repetitions of a board state. \\
+
+
+By convention, in Go we identify Black with the Left player, and White with the Right player. 
+For instance, treating the following Go position as a combinatorial game, 
+$\mathcal{G}_L$ is the set of moves labeled $\{A, B, C, D, E, F,G \}$, and 
+$\mathcal{G}_R$ is the set of moves labeled $\{a,b,c,d,e,f,g\}$
+(the bottom left (resp. right) corner intersection does not appear as options for Black (resp. White) since 
+it would be a illegal move for Black (resp. White)).
+
+\begin{figure}[H]
+\centering 
+\begin{subfigure}[b]{0.45\linewidth}
+\centering
+
+\begin{psgoboard*}[4]
+\stone{black}{c}{4}
+\stone{black}{c}{3}
+\stone{black}{c}{2}
+\stone{black}{c}{1}
+\stone{black}{d}{2}
+\stone{white}{b}{2}
+\stone{white}{b}{1}
+\stone{white}{a}{2}
+\markpos{\marklb{A}}{a}{4}
+\markpos{\marklb{B}}{a}{3}
+\markpos{\marklb{C}}{b}{4}
+\markpos{\marklb{D}}{b}{3}
+\markpos{\marklb{E}}{d}{4}
+\markpos{\marklb{F}}{d}{3}
+\markpos{\marklb{G}}{d}{1}
+\end{psgoboard*}
+
+\caption{Options of Black}
+
+\end{subfigure}
+\quad
+\begin{subfigure}[b]{0.45\linewidth}
+\centering
+
+\begin{psgoboard*}[4]
+\stone{black}{c}{4}
+\stone{black}{c}{3}
+\stone{black}{c}{2}
+\stone{black}{c}{1}
+\stone{black}{d}{2}
+\stone{white}{b}{2}
+\stone{white}{b}{1}
+\stone{white}{a}{2}
+\markpos{\marklb{a}}{a}{4}
+\markpos{\marklb{b}}{a}{3}
+\markpos{\marklb{c}}{b}{4}
+\markpos{\marklb{d}}{b}{3}
+\markpos{\marklb{e}}{d}{4}
+\markpos{\marklb{f}}{d}{3}
+\markpos{\marklb{g}}{a}{1}
+\end{psgoboard*}
+
+\caption{Options of White}
+
+\end{subfigure}
+
+\end{figure}
 
 \subsection{Conway Induction}
 
-The following theorem presents gives a form of induction on games. 
-This has applications to almost every result in the theory, since most 
-proofs rely on being able to manipulate the recursive structure of games.
+The following theorem gives a principle for proofs by induction on games, which 
+is almost every proof in the theory, since we frequently rely on being able 
+to manipulate the recursive structure of games (Sometimes induction is used implicitly 
+to make proofs more readable, but it is important to know that the underlying technique 
+is well-defined).
 
-\begin{theorem}[Conway Induction]
+\begin{theorem}[Conway Induction] There are two versions of induction on games:
 \label{induction}
-For $n \geq 1$ let $P(G_1, \ldots, G_n)$ be a $n$-ary relation on games.
-For all $i \in \{1, \ldots n\}$ suppose $P(G_1, \ldots, G_i', \ldots, G_n)$ implies 
-$P(G_1, \ldots, G_i, \ldots, G_n)$. Then $P(G_1, \ldots, G_n)$ holds for any $n$-tuple 
-of games.
+\begin{enumerate}
+    \item Suppose that if $P$ holds for any $G' \in \mathcal{G}_L \cup \mathcal{G}_R, \: 
+    G = (\mathcal{G}_L, \mathcal{G}_R)$ then $P$ holds for $G$.  
+    Then $P$ holds for every game.
+    \item More generally, for $n \geq 1$ let $P(G_1, \ldots, G_n)$ be some property of a $n$-tuple of games.  Suppose 
+    that for all $i \in \{1, \ldots n\}$ and all $G_i' \in \mathcal{G}_L^i \cup \mathcal{G}_R^i, \: 
+    G_i = \{\mathcal{G}_L^i \mid \mathcal{G}_R^i\}$,
+    $P(G_1, \ldots, G_i', \ldots, G_n)$ implies $P(G_1, \ldots, G_i, \ldots, G_n)$. 
+    Then $P(G_1, \ldots, G_n)$ holds for any $n$-tuple  of games.
+\end{enumerate}
 \end{theorem}
 
 \begin{proof}
-    Suppose $P(G_1, \ldots, G_n)$ is false. 
-    (In the general case, making this selection requires the Axiom of Choice,
-    since a game can have infinitely many options).
-    Thus, $\{G_k\}_k$ is an inifinite sequences of games, where $G_{k+1} \in L_k \cup R_k$
-    for all $k$. This is a contradiction, since by the Descending Game Condition no 
-    such infinite sequence exists. 
+    Suppose for the sake of contraction that $G$ is a game which does not satisfy $P$. 
+    If all the left and right options of $G$ satisfy $P$, then $G$ satisfies $P$ by hypothesis.
+    Thus there must exist $G' \in \mathcal{G}_L \cup \mathcal{G}_R$ that does not satisfy $P$ 
+    \footnote{Formally, we need 
+    the Axiom of Choice to choose the next $G^{(n+1)}$ for which $P$ does not hold from each set 
+    $L^{(n)} \cup R^{(n)}$}. Note that such a $G'$ cannot be the zero game $\{ \mid \}$, since the
+    zero game satisfies $P$ vacuously. Thus $G'$ is guaranteed to have options.
+    Repeating this argument for $G'$, we can construct an infinite sequence $\{G', G'', G''' \}$ of games,
+    each an option of the previous. This is a contradiction, since by the Descending Game Condition 
+    no such infinite sequence exists. \\
+    The proof for an $n$-ary relation on games is similar. 
 \end{proof}
+It can be shown that Conway Induction implies the Descending Game Condition \cite{schleicher2006introduction}.
+The two are thus equivalent (compare to the Well-ordering Principle and induction on $\N$).
+\subsection{Outcome of A Game}
 
-It can be shown that Conway Induction implies the Descending Game Condition \cite{schleicher2006introduction}
-As such, they are equivalent.
+\begin{definition}[Normal Play Convention]
+    A player loses the game when it is their turn to move but are unable to do so, i.e. they have
+    no legal options.
+\end{definition}
+While it is not immediately apparent how this definition matches the rules
+for determining the winner of a game of G introduced in \S 2, The Normal Play Convention
+is preferred to a notion of score since it allows for a theory applicable 
+to a much wider variety of games. We will construct a variant of Go where the winner 
+is determined by the Normal Play Convention, and show how we can recover the normal notion of
+score from there. \\
 
-\subsection{Winning a Game}
+Going by the Normal Play Convention, there are only four possible outcomes to a game:
+\begin{itemize}
+    \item $G > 0$: Left can enforce a win, no matter who starts.
+    \item $G < 0$: Right can enforce a win, no matter who starts.
+    \item $G = 0$: Second player can enforce a win, no matter who starts.
+    \item $G \parallel 0$: First player can enforce a win, no matter who starts.
+\end{itemize}
+\textbf{Note}:  ``Left can enforce a win'' means that Left always wins when they play optimally.
+In fact, we might not know the optimal sequence of moves, and Right may still win if Left plays badly.
+Outcomes in combinatorial game theory are outcomes for \textit{optional play}.\\
 
-\subsubsection{Mathematical Re-formulation of Rules of Go}
-Detail on how this definition is a natural fit for the Game of go. 
-Re-formulation of rules of game for more convenient analysis.
+Using these, we can define the following useful conventions:
+\begin{itemize}
+    \item $G \geq 0 :=$ $G > 0$ or $G = 0$.
+    \item $G \leq 0 :=$ $G < 0$ or $G = 0$.
+    \item $G \triangleleft 0 :=$ $G < 0$ or $G \parallel 0$.
+    \item $G \triangleright 0 :=$  $G > 0$ or $G \parallel 0$.
+\end{itemize}
 
-The concept of \textit{numbers} will make this correspondence even simpler.
+The motivation for this notation will become clear once we have defined a few relations on games.
+It turns out that only $G \geq 0$ and $G \leq 0$ are strictly needed - the other outcomes can be defined 
+using these \cite[\S 2.2]{schleicher2006introduction}. One can verify that a game must end in one of those 
+two outcomes using the Descending Game Condition.
 
-\subsection{Arithmetic of Games}
-Games as an algebraic group/ring/field. Illustration of the additive 
-structure of the game of Go
+\subsubsection{Go as a Proper Combinatorial Game}
+We are now in a position to reformulate
+the rules of Go such that they correspond to the definitions of combinatorial game
+theory. The rules of this ``mathematical'' Go are mostly the same same, with the exception of:
+\begin{itemize}
+    \item (Passing) Instead of playing a stone on the board, a player may 
+    return a prisoner of the opponent's color.
+    \item (Ending the Game) The games ends when one player has no legal 
+    move, in which case the game ends and they lose. 
+    \item (Scoring) There is no scoring in this version of the rules. Integer \textit{Komi} 
+    can be handled by giving White an equal number of Black stones as prisoners at the 
+    beginning of the game. A $1/2$ point Komi can be handled by giving 
+    \item (Promoting to immortality) Whenever either player has a parallel set of groups that
+    each has exactly two liberties, such  that every node adjacent to each of these two
+    liberties is occupied  by some member of this set of groups, then the group consisting of 
+    all parallel groups which adjoin this pair of eyes are \textit{promoted to immortality}, 
+    meaning that they can never be captured.  
+    \footnote{While slightly inelegant, this ``hack'' is required to ensure that the 
+    outcomes are equal to the normal game.}
+\end{itemize}
+As before, we will denote such alive groups with a $\tau$. As in a proper combinatorial game, 
+the last player to move wins. Careful examination of these ``mathematical'' rules shows 
+that the respective scores in the modern AGA rules in a terminal position is equal to the 
+number of legal moves remaining to each player in that position. \\
+Once a terminal position in the modern rules is reached (usually when both players believe
+there are no more points left to be claimed), we can determine the winner of the 
+``mathematical'' game by subtracting White's points from Black's: 
+If the total is smaller than 0, White has more legal moves left than Black, and vice versa.
 
-Other operations besides addition and negation can be defined on some 
-classes of games (in particular, the class of game introduced in the next section, 
-\textbf{numbers}, forms a field \cite{schleicher2006introduction}),
- but these two operations are the only ones we require in this study of Go endgames. 
-
-\subsection{Some Useful Surreal Numbers}
-
-\subsubsection{Integers} 
-
-\subsubsection{Relating the Mathematical Game to the Real Game}
-
-Equipped with the notion of integers, it is possible to clarify the relation 
-between the ``mathematical'' rules of Go presented above and the standard AGA 
-rules.
-
-\subsubsection{Fractions}
-
-The applications of fractions to Go will become clear once we introduce 
-the chilling and warming operators to study endgame positions. 
-
-Arbitrary real numbers can then be constructed as such using fractions.
-TODO: show example. 
-However, these do not show up in the endgame analysis 
-techniques discussed here.
-
-\subsubsection{Inifinitesimals}
-
-Infinitesimals as moves with smaller than fractional value. 
-
-John H. Conway's theory of surreal numbers also includes \textbf{ordinal numbers} 
-\cite{schleicher2006introduction}. However, while these do not show either in the analysis 
-of Go endgames, it is interesting to note that surreal numbers provide a unified 
-framework for treating infinitesimals, real numbers and ordinal numbers, and that 
-Go endgame was the first motivator for the study of this class 
-(cf. \cite[Prologue]{conway2000numbers}).
-
-\subsection{Simplifying Games}
-
-This section presents several theorems for symplifying games that will be 
-useful in the proofs of several important results as well as in computing 
-values of endgames positions. 
-
-\begin{theorem}[Number Avoidance Theorem]
+\begin{figure}[H]
+\begin{subfigure}[b]{0.45\linewidth}
+\centering
+\begin{psgoboard*}[5]
+    \stone{black}{b}{5}
+    \stone{black}{b}{4}
+    \stone{black}{b}{3}
+    \stone{black}{c}{3}
+    \stone{black}{c}{2}
+    \stone{black}{c}{1}
     
-\end{theorem}
+    \stone{white}{c}{5}
+    \stone{white}{c}{4}
+    \stone{white}{d}{4}
+    \stone{white}{d}{3}
+    \stone{white}{d}{2}
+    \stone{white}{d}{1}
+\end{psgoboard*}
+\caption{A normal terminal position under AGA rules. Ignoring 
+\textit{komi}, Black has 7 points, White has 6. Black wins.}
+\end{subfigure}
+\quad
+\begin{subfigure}[b]{0.45\linewidth}
+\centering
+\begin{psgoboard*}[5]
+    \stone{black}{b}{5}
+    \stone{black}{b}{4}
+    \stone{black}{b}{3}
+    \stone{black}{b}{5}
+    \stone{black}{c}{3}
+    \stone{black}{c}{2}
+    \stone{black}{c}{1}
+    
+    \stone{black}{a}{1}
+    \stone{black}{a}{2}
+    \stone{black}{a}{3}
+    \stone{black}{a}{4}
+    \stone[\marklb{$\tau$}]{black}{b}{1}
+    
+    \stone{white}{c}{5}
+    \stone{white}{c}{4}
+    \stone{white}{d}{5}
+    \stone{white}{d}{3}
+    \stone{white}{d}{2}
+    \stone{white}{d}{1}
+    \stone{white}{e}{4}
+    \stone{white}{e}{3}
+    \stone{white}{e}{2}
+    \stone[\marklb{$\tau$}]{white}{e}{1}
+\end{psgoboard*}
+\caption{Both players have promoted to immortality in the mathematical rules,
+Black has played 5 extra moves, White 4. White to play loses, since they exhaust their available legal moves before Black}
+\end{subfigure}
+\end{figure}
 
-\begin{theorem}[Deleting Dominated Options]
-    Let $G$ be a game with $G^L \in \mathcal{G}^L$ and $G^R \in \mathcal{G}^R$.
-    Then value of $G$ is unchanged if options of $\mathcal{G}^L$ dominated by $G^L$
-    are removed. Similarly, the value of $G$ is unchanged if options of $\mathcal{G}^R$ 
-    which are dominated by $G^R$ are removed. 
-\end{theorem}
+In fact, this foreshadows the role of \textit{integer numbers}, which will highlight 
+an even simpler correspondence between the rulesets.
+For simplicity, we will ignore in this formulation positions which contains \textit{sekis} 
+or \textit{kos} (see \S 1). Although these can in theory be integrated into this 
+``mathematical'' ruleset, they do not appear in the situations that we will be able to 
+analyze in \S 4. 
 
+See \cite[Appendix B]{berlekamp1994mathematical} for a more detailed formalization
+of all the elements of the game.
+
+\subsection{Arithmetic of Games} 
+
+In Go, a sum of games be understood as pasting together two board positions side-by-side to 
+get a larger position, provided that move sequences available in the two original positions 
+stay the same after pasting (i.e. the positions are independent). This concept is fundamental 
+to analyzing complex positions, allowing us to break down complex positions into simpler 
+parts (provided they do no affect each other) and recover a global result by taking the sum.
+
+% insert figure showing a sum?
+
+Thus, we define a sum of two games as the game in which players
+can choose to move on either of the two original games, leaving the other game unchanged.
+\begin{definition}[Sums and Differences of Games] Let $G = \{\mathcal{G}_L \mid \mathcal{G}_R\}$
+and  $H = \{\mathcal{H}_L \mid \mathcal{H}_R\}$. We define
+\begin{itemize}
+    \item $G + H := \{ (\mathcal{G_L} + H) \cup (G + \mathcal{H}_L) \mid (\mathcal{G_R} + H) \cup (G + \mathcal{H}_R)\}$, 
+    where $\mathcal{G_L} + H := \bigcup_{G_L \in \mathcal{G}_L} \{G_L + H \}$
+    \item $-G := \{-\mathcal{G}_R \mid -\mathcal{G}_L \}$, where 
+    $-\mathcal{G}_L := \bigcup_{G_L \in \mathcal{G}_L} \{G_L \}$ 
+    \item $G - H := G + (-H)$
+\end{itemize}
+\end{definition}
+These are recursive definitions, and so we verify check that these are all well-defined 
+games using induction (Most subsequent
+proofs in this section are omitted since they are fairly straightforward and use 
+a similar technique with Conway Induction, see \cite[\S 2]{schleicher2006introduction} for details).
+For instance, this is the proof for addition:
 \begin{proof}
-    A similar argument holds for removing dominated right options of $G$ \qed
+    Consider the following statement  $P(G,H) :=$ ``$G + H$ is a game''. Now, suppose that for any 
+    $G' \in \mathcal{G}_R \cup \mathcal{G}_R$, $H' \in \mathcal{H}_L \cup \mathcal{H}_R$,
+    $G' + H$ and $G + H'$ are games. Now, consider the set $\mathcal{G_L} + H = \bigcup_{G_L \in \mathcal{G}_L} \{G_L \}$. By assumption, for any $G_L \in \mathcal{G}_L$, $G_L + H$ is a game, 
+    therefore all of the elements of $\mathcal{G}_L + H$ are games. Similarly, the elements of 
+    $G + \mathcal{H}_L$, $\mathcal{G_R} + H$ and $G + \mathcal{H}_R$ are games. Therefore 
+    $(\mathcal{G_L} + H) \cup (G + \mathcal{H}_L)$ is a game and $(\mathcal{G_R} + H) \cup (G + \mathcal{H}_R)$ is a game. Therefore $G+H$ is a game. 
+    
+    Therefore, by Conway induction, for any games $G$ and $H$, $G+H$ is a also a game
+    \footnote{Schleicher and Stoll comment on how, like induction on $\N$ 
+    this type of proof can seem circular at first sight}.
 \end{proof}
 
-\begin{theorem}[Bypassing Reversible Options]
+These operations have many of the expected properties of addition and negatives, justifying 
+our choice of names and notation:
+\begin{theorem}[Properties of Sums and Differences]. Let $F,G,H$ be games. Then,
+    \label{additionprop}
+    \begin{enumerate}
+        \item $G+H = H+G$
+        \item $F + (G+H) = (F+G) + H$
+        \item $-(-G) = G$
+        \item $-(G+H) = (-G) + (-H)$
+        \item For $0 := \{|\}$, $G+0=G$
+    \end{enumerate}
+\end{theorem}
+Note that we define $\{ | \}$ as \textbf{the} \textit{zero} game (the second player always wins since 
+whoever plays first has no moves available), but any game $G = 0$ is called \textbf{a} \textit{zero game}.
+The proofs of these statements are immediate using the definitions and Conway Induction. 
+Equipped with these new operations, we can now define comparisons between games.
+\begin{definition} Let $G, H$ be games. Define
+\begin{itemize}
+    \item $G = H := G - H = 0$
+    \item $G > H := G - H > 0$
+    \item $G < H := G - H < 0$
+$G \parallel H$, $G \geq H$, $G \triangleleft H, \ldots$ are defined similarly.
+\end{itemize}
+\end{definition}
+
+We now present a series of results showing that the relations defined above 
+behave in many ways we'd intuitively expect from the notation. These will be 
+handy in simplifying arguments on endgames
+
+\begin{theorem} For a game $G$,
+    \label{reflexequal}
+    \begin{enumerate}
+        \item $G -G = 0$.
+        \item $G_L \triangleleft G$ for all left options $G_L$ of $G$ and $G \triangleleft G_R$ 
+        for all right options $G_R$.
+    \end{enumerate}
 \end{theorem}
 
-\begin{proof}
+\begin{lemma}[Addition Respects Ordering] \: 
+\begin{enumerate}
+    \item If $G \geq 0$ and $H \geq 0$ then $G+H \geq 0$.
+    \item If $G \geq 0$ and $H \triangleright 0$ then $G+H \triangleright 0$.
+\end{enumerate}
+\end{lemma}
 
-\end{proof}
+\begin{theorem}[Addition of a Zero Game]. Suppose $G = 0$. Then
+    $H = 0 \iff G + H = 0$, $H > 0 \iff G + H > 0$, $H < 0 \iff G+H < 0$ and 
+    $H \parallel 0 \iff G + H \parallel 0$ 
+\end{theorem}
+That is, the addition of a zero game does not change the outcome.
+\begin{corollary}
+    If $G = H$ then $G$ and $H$ have the same outcome.
+\end{corollary}
+
+\begin{corollary}
+    For any games $G, H, K$, $G > H \iff G + K > H + K$ and $G < H \iff G + K < G + K$
+\end{corollary}
+
+These last result will provide justification for substituting moves with equal options (which may be easier to manipulate) to determine the outcome of a Go position.
+
+\begin{theorem}[An Equivalence Relation on Games] \:
+\label{equivalence}
+\begin{enumerate} 
+    \item $>$ and $<$ are transitive relations.
+    \item Equality (=) is an equivalence relation.
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Equal Games] \:
+\begin{enumerate}
+    \item If $H = H'$ then $G + H = G + H'$
+    \item Suppose we have games  $G = \{G^{L_1}, G^{L_2}, \ldots  \mid G^{R_1}, G^{R_2}, \ldots\}$ and 
+    $H = \{H^{L_1}, H^{L_2}, \ldots  \mid H^{R_1}, H^{R_2}, \ldots\}$ such that $G^{L_i} = H^{L_i}$ 
+    and $G^{R_i} = H^{R_i}$ for all left and right options. Then $G = H$. 
+\end{enumerate}
+\end{theorem}
+
+Using the previous results, it can be shown that equivalence classes games under (=) form 
+an abelian group \cite[\S 2]{schleicher2006introduction} \\
+Other operations besides addition and negation can be defined on some 
+specific types of games called \textit{numbers}, introduced in the next section.
+In fact, numbers form an algebraic field \cite[\S 3]{schleicher2006introduction}, 
+but addition and subtraction are the only arithmetic operations we will require in this 
+study of Go endgames. 
 
 \end{document}

@@ -1,12 +1,22 @@
 \documentclass[../math194_paper.tex]{subfiles}
 
 \begin{document}
-    
-\section{Conclusion}
 
-Advantages of the theory over other approaches such as naive tree search and machine 
-learning for, especially from a tractability/exactness perspective. Limits of the
-theory (e.g. positions involving KOs), and directions for future reading. 
-Some important open research problems in the theory of Go. 
+It is conceivable that one could solve the examples in \S 3 by carefully reading out 
+sequences of moves. However, the techniques presented give a much more systematic - 
+and faster, once one is familiar with the tools - way of carrying out this analysis,
+which carries a definite advantage as positions become larger.
+In fact, without these tools, larger version of similar problems can challenge 
+even the best human professionals or general-purpose AI techniques.
+Furthermore, this analysis can be useful before the endgame - 
+professional players frequently make midgame moves based on small endgame subtleties 
+\cite[\S 5.1]{berlekamp1994mathematical}. \\
+
+However, applying these technique to other types of Go problems meets considerable
+difficulties - for instance, in many positions more than a point is in play, 
+and while warming inverts chilling by one point, chilling by two or more points is not 
+inverted by warming as many times \cite[\S 5.2]{berlekamp1994mathematical}.
+Thus, extending the results of combinatorial game theory to solve more categories of Go positions 
+remains an area of active research. 
 
 \end{document}

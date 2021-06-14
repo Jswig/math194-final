@@ -2,25 +2,30 @@
 
 \begin{document}
 
-\section{One-point Go Endgames}
-This section uses concepts from the previous section to derive exact 
-results for optimal play in the endgame.
+This sections covers some applications of the combinatorial game theory we 
+described to solving a class of endgame Go positions. In particular, these
+will typically be positions where optimal play can yield an net advantage 
+of one point.
 
 \subsection{Endgame Positions}
-Type of positions where the theory is useful in deriving exact results.
 
-\subsection{Chilling}
-Concepts of chilling and ``hot'' moves.
+\begin{definition}[Parity of positions] \:
+    \begin{itemize}
+        \item A Go position is \textit{even} if the number of empty intersections plus the number of 
+        captured prisoners is even
+        \item A Go position is odd if it is not even
+    \end{itemize}
+\end{definition}
+Parities add as expected and alternate during play.
 
-\begin{theorem}[Invertibility of Chilling]
-    
-\end{theorem}
+\begin{definition}[Elementary position]
+    A Go position is \textit{elementary} if when completely played out, every point on the board 
+    is either occupied by a stone in an \textit{alive} group, or becomes territory for a player.
+\end{definition}
+This implies that positions that where the ownership of territory or the life of groups are undecided
+are excluded from our analysis. This includes \textit{kos} and \textit{sekis}.
 
-\subsection{Corridors}
-Solving positions involving simple shapes.
-
-\subsection{More Complicated Shapes}
-Examples of applications of the theory to solving endgame positions 
-involving more complex shapes. 
+We will require that Go positions we analyze are both even and elementary,
+since the theorems we will use for this in the following section require these assumptions to function.
 
 \end{document}

@@ -1,0 +1,85 @@
+\documentclass[../math194_paper.tex]{subfiles}
+
+\begin{document}
+\subsection{Simplifying Games}
+
+This section presents several theorems for simplifying games that are 
+used in the proofs of several important results as well as in computing 
+values of endgames positions. 
+
+The following result says that we can ignore moves that are worse than 
+others (for the moving player) in computing the value of a game, since 
+an optimal player will always ignore them.
+
+\begin{definition}[Dominated Option] Let $G$ be a game.
+    \begin{itemize}
+        \item Left option $G_L$ is \textit{dominated} by another left option $G_L'$:
+        $G_L \leq G_L'$.
+        \item Right option $G_R$ is \textit{dominated} by another right option $G_R'$:
+        $G_R \geq G_R'$.
+    \end{itemize}
+\end{definition}
+
+\begin{theorem}[Deleting Dominated Options]
+    Let $G$ be a game with $G^L \in \mathcal{G}^L$ and $G^R \in \mathcal{G}^R$ Then,
+    \begin{itemize}
+        \item The value of $G$ is unchanged if options of $\mathcal{G}^L$ dominated by $G^L$.
+        \item The value of $G$ is unchanged if options of $\mathcal{G}^R$ 
+    which are dominated by $G^R$ are removed. 
+    \end{itemize}
+\end{theorem}
+
+\begin{figure}[H]
+
+\end{figure}
+
+This second result tells us that if the opponent can counter a move with a 
+response that leads to a better positions (for them) than the original, then we 
+should expect to play on the position resulting from that response.
+\begin{definition}[Reversible Option] 
+    Let $G$ be game. 
+    \begin{itemize}
+        \item Left option $G_L$ is \textit{reversible} through $G_{LR}$ if
+        $G_L$ has right option $G_{LR} \leq G$. 
+        \item Right option $G_R$ is \textit{reversible} through $G_{RL}$ if 
+        $G_R$ has left option $G_{RL} \geq G$.
+    \end{itemize}
+\end{definition}
+
+\begin{theorem}[Bypassing Reversible Options] \label{bypassing}\:
+    \begin{itemize} 
+        \item If $G$ has a left option $H$ that is reversible through $K=H_R$ then 
+        replacing $H$ by all the left options of $K$ does not change the value of the game.
+        \item If $G$ has a right option $H$ that is reversible through $K=H_L$ then 
+        replacing $H$ with all the right options of $K$ does not change the value of the 
+        game
+    \end{itemize}
+\end{theorem}
+
+\begin{definition}[Short Game]
+    A game is \textit{short} if it has finitely many positions.
+\end{definition}
+
+\begin{lemma}
+    Go is a finite game
+\end{lemma}
+We can verify this by determining the following 
+upper bound on the number of possible positions. On an $n \times n$ grid, each intersection
+either has a White stone, a Black stone or is empty. Thus there are at most $(n^2)^3$
+possible board positions. \footnote{
+    The argument gets a lot more complicated if we account for prisoners directly. However 
+    we can appeal to the Chinese rules - which we can prove yield the same result as 
+    AGA or ``mathematical'' rules, but don't use prisoners - and substitute AGA games 
+    with equal Chinese games in the argument.
+}
+
+\begin{definition}[Canonical Forms]
+    \ref{canonical}
+    In each equivalence class of finite games (under =), there is a unique game that has no dominated
+    or reversible options. \\
+    This game is called a \textit{canonical form}.
+\end{definition}
+This allows us to greatly simplify our analysis of Go positions by arguing on the canonical 
+form directly. 
+
+\end{document}

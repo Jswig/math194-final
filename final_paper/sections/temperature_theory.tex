@@ -1,0 +1,203 @@
+\documentclass[../math194_paper.tex]{subfiles}
+
+\begin{document}
+
+\subsection{Cooling and Warming}
+
+\begin{definition}[Cooling] Game $G = \{\mathcal{G}_L \mid \mathcal{G}_R\}$ 
+\textit{cooled} by number $t>0$ is 
+\[ G_t := \begin{cases}
+    x \text{ when for some } \tau < t, \{\mathcal{G}_L-t \mid \mathcal{G}_R+t\} = x + \varepsilon &\text{for some infinitesimal } $\varepsilon$ \\
+    \{\mathcal{G}_L-t \mid \mathcal{G}_R+t\} &\text{otherwise}
+\end{cases}
+\]
+where $\mathcal{G}_L-t = \bigcup_{G_L \in \mathcal{G}_l} \{G_L-t\}$.
+$\tau$ is called the \textit{temperature} of $G$, and $x$ its \textit{mean}.
+\end{definition}
+
+The temperature of a game can be understood as a measure of
+how much players value the ability to play a move. We illustrate this concept 
+with a somewhat contrived example:
+
+\begin{figure}[H]
+\begin{subfigure}[b]{0.45\linewidth}
+\centering
+\begin{psgopartialboard*}{(1,1)(3,3)}
+    \stone{black}{a}{1}
+    \stone{black}{a}{2}
+    \stone{black}{a}{3}
+    \stone{black}{b}{2}
+    \stone{white}{c}{1}
+    \stone{white}{c}{2}
+    \stone{white}{c}{3}
+    \stone{white}{b}{1}
+\end{psgopartialboard*}
+\caption{
+    \textit{Hot game}: Both players should really want to move, since 
+    the first player to move captures the opponent's entire group.
+}
+\end{subfigure}
+\quad
+\begin{subfigure}[b]{0.45\linewidth}
+\centering
+\begin{psgopartialboard*}{(1,1)(3,3)}
+    \stone{black}{a}{1}
+    \stone{black}{a}{2}
+    \stone{black}{a}{3}
+    \stone{white}{c}{1}
+    \stone{white}{c}{2}
+    \stone{white}{c}{3}
+    \stone{white}{b}{1}
+\end{psgopartialboard*}
+\caption{
+   \textit{Cold} game: moving for either player is bad, since the other player can immediately
+   capture the entire group. Both Black and White would rather 
+   not move at all in this positions.
+}
+\end{subfigure}
+\end{figure}
+
+Cooling adds a penalty to moving - the players loses $t$ points by moving.
+For $t \geq \tau$, moving becomes disadvantageous.
+
+\begin{theorem}[Properties of Cooling]
+    \label{linearity_cooling}
+    Let $G, H$ be games. Then 
+    \begin{enumerate}
+        \item $G_t + H_t = (G+H)_t$.
+        \item If $G \geq H$ then $G_t \geq H_t$
+    \end{enumerate}
+\end{theorem}
+That is, cooling a game preserves outcomes and sums.
+This will be used to justify the fact that we can cool independant sub-positions 
+to get a result for the full cooled game. 
+We will call playing on the cooled game $G_1$ \textit{playing the chilled game}, which 
+corresponds exactly to the game with markings described in \S \ref{infinitesimals}.
+
+The $left stop$ of a game is the maximum number Left can reach by moving first if
+Right moves perfectly. 
+\begin{definition} Let $G$ be a game
+\begin{itemize} \itemsep 5pt
+    \item \textit{left stop} of $G$: $ LS(G) := \begin{cases}
+        G \text{ if } $G$ \text{ is a number} \\
+        \max \{RS(H): H \text{ is left option of } G\}  \text{ otherwise}
+    \end{cases}$ 
+    \item \textit{right stop} of $G$: $RS(G) := \begin{cases}
+        G \text{ if } $G$ \text{ is a number} \\
+        \max \{LS(H): H \text{ is right option of } G\} \text{ otherwise}
+    \end{cases}$
+\end{itemize}
+\end{definition}
+
+Unlike cooling, a \textit{warming} operator makes it more advantageous to make a
+move, that is, it raises the temperature of the game.
+\begin{definition}[A Warming Operator] For $G = \{\mathcal{G}_L \mid \mathcal{G}_R\}$,
+\[
+    \int G := \begin{cases}
+        G & \text{ if } $G$ \text{ is an even integer} \\
+        G* & \text{ if } $G$ \text{ is an odd integer} \\
+        \{1 + \int \mathcal{G}_L \mid -1 + \int \mathcal{G}_R\} & \text{ otherwise}
+    \end{cases}
+\]
+where $1 + \int \mathcal{G}_L := \cup_{G_l \in \mathcal{G}_L} \{1 + \int G_L \}$
+\end{definition}
+
+For a more detailed treatment of temperature theory, see \cite[\S 9]{conway2000numbers}.
+This section otherwise follows closely the exposition in \cite[\S 3.5-3.6]{berlekamp1994mathematical}
+
+\subsection{Inverting Cooling}
+
+In the following, let $G$ be an even elementary Go position in canonical form.
+We will show that for such a game, the warming operator introduced in the previous 
+section is the inverse of cooling by $t=1$, before returning to applications of 
+this result to Go.\\
+
+\begin{lemma}
+    A stopping position of $G$ is even if and only if its value is even.
+\end{lemma}
+
+
+
+that $G$ is an even, elementary Go position.
+
+We define the following function which will be useful in subsequent proofs.
+\[
+    f(G) := \begin{cases}
+        n & \text{if } $G = n$ \text{ or } $G = n*$ \\
+        \left\{ 
+        f(\mathcal{G}_L) - 1 \Big| f(\mathcal{G}_R) + 1
+        \right\} & \text{otherwise}
+    \end{cases}
+\]
+where $f(\mathcal{G_l}) - 1 = \bigcup_{G_L \in \mathcal{G}_L} \{f(G_L) - 1\}$.
+It is easy to see that this is the inverse of the $\int$ operator, i.e. $f = \int^{-1}$.
+
+This theorem, and corollary \ref{inverting_dame}, will justify the approach of cooling a
+game to simplify the analysis of a position then warming to recover the outcome 
+of the original position.
+\begin{theorem}[Inverting Chilling] $\int G_1 = G$
+    \label{inverting}
+\end{theorem}
+\begin{proof}
+    We have 
+    \begin{align*}
+        G &= \int f(G) & \text{by Lemma } \ref{warming_inverse} \\
+        &= \int G_1 & \text{by Lemma } \ref{inverse_behaves}
+    \end{align*}
+\end{proof}
+
+ The proof of \ref{inverting} requires next four lemmas. We show the proof of this next
+ lemma in particular since it justifies our requirement that $G$ is an even, elementary Go position.
+\begin{lemma}
+    $G$ and each of its left and right options has either left stop greater than 
+    right stop, or is of the form $n$ or $n*$, for $n$ integer.
+\end{lemma}
+\begin{proof} \:
+    [\cite{berlekamp1994mathematical}[\S 3.6]]
+    For the sake of contradiction, suppose that this does not hold, and
+    so $LS(G) = RS(G) = n$ for some $n \in \Z$. 
+    On one hand, if $n$ is even, then $G = n$ (since $G$ is assumed to be even). As $G$ is even, 
+    a move to $n$ must occur after an even number of moves, so the second player wins
+    $n -G$ - by the Number Avoidance Theorem \ref{number_avoidance} we do not need to consider moves
+    on $n$. \\
+    On the other hand, if $n$ is odd, then $G = n*$. Consider the game $G - n*$ (again, 
+    since $n*$ is also a number). If Left makes two consecutive moves on $G$, this can only lead 
+    to a stop $\geq n$. Thus, second player can enforce a win by playing on $G$ until its stop. If 
+    stop is $n$, an odd number of plays were made since G is even.\\
+    
+    We can make a similar argument for odd sub-positions of $G$ to complete the proof.
+\end{proof}
+
+\begin{lemma}
+    \label{warming_inverse}
+    $G  = \int f(G)$
+\end{lemma}
+
+The following two lemmas are use in the proof of Lemma \ref{inverse_behaves}.
+\begin{lemma}
+    Let $t=1/2^i$ and $H$ be a game whose stopping positions are all multiples of 
+    $2t$ Then either $H$ has temperature 0, or $H$ has temperature $\geq t$. 
+    The stopping positions of $H$ are themselves multiples of $t$.
+\end{lemma}
+
+\begin{lemma}
+    If $G$ has mean $i/2^j$ for odd $i$, then the temperature of $G$ is 
+    greater or equal to $1 - 1/2^j$
+\end{lemma}
+
+\begin{lemma}
+    \label{inverse_behaves}
+    $f(G) = G_1$
+\end{lemma}
+
+\begin{corollary}[Inverting Chilling up to a \textit{dame}]
+    \label{inverting_dame}
+    Let $G$ be a an elementary Go position. Then
+    \[\int G_1 = \begin{cases}
+        G \\
+        \text{or} \\ 
+        G*
+    \end{cases}\]
+\end{corollary}
+
+\end{document}

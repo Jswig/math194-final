@@ -2,9 +2,13 @@
 
 \usepackage{mathpb} % custom mathematics package including AMSmaths/fonts
 
+\usepackage{multicol}
+\usepackage{psgo}
 \usepackage{amsrefs}
-\usepackage{tikz}
+\usepackage{subcaption}
 \usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{float}
 \usepackage{subfiles}
 
 \theoremstyle{plain}
@@ -15,9 +19,11 @@
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
 
+\newcommand{\parallel}{\mathbin{\|}}
+
 \hypersetup{linktoc=all}
 
-\title{Playing Optimal Go Endgames with Combinatorial Game Theory}
+\title{Solving One-Point Go Endgames with Combinatorial Game Theory}
 \author{Anders Poirel - apoirel@ucsc.edu \\ University of California, Santa Cruz}
 \date{Spring 2021}
 
@@ -25,34 +31,59 @@
 
 \maketitle
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{final_paper/prince_genji.jpg}
+\end{figure}
+
 \begin{abstract}
     Combinatorial game theory studies deterministic, perfect-information 
     games with guaranteed termination. As a perfect-information, symmetric 
     two-player game, Go is one of the canonical objects of study in the field.
-    While the combinatorial complexity of the game is such that it cannot be fully solved,
-    Go endgames can be decomposed into simpler objects where combinatorial game theory can 
-    be used to achieve optimal play. With the small victory margins observed at high
-    levels of (human) play, using results from combinatorial game theory can have a 
-    noticeable impact on one's odds of winning 
+    While the combinatorial complexity of the game is such that most positions cannot 
+    be solved solved, 
+    many Go endgame positions can be decomposed into simpler objects which can fully
+    analyzed using results from combinatorial game theory
 \end{abstract}
 
 \newpage
+
+Illustration: Toyokuni III, \textit{Prince Genji Watching Two Ladies Playing Go }, 
+Izumiya Ichibei, 1849-1851.
+
 \tableofcontents
 \newpage 
-
 \section{Introduction}
 
-This seeks a balance 
+Go is known for its combinatorial complexity - a lower bound $10^{10^48}$ has 
+been found on the number of possible Go games on a 19$\times$19 board. While this complexity 
+makes it impossible in practice to give exact results in most positions, it also makes 
+the game almost 
+
 by introducing illustrating the fundamental concepts of the theory immediately 
-with Go positions. I hope to convey how the theory naturally emerges from the rules 
+with Go positions, I hope to convey how the theory naturally emerges from the rules 
 of Go, despite being applicable to a much wider variety of two-player deterministic
 games. 
 
 \subfile{sections/game}
 
+\section{Combinatorial Game Theory for Go}
+
 \subfile{sections/game_theory}
 
+\subfile{sections/simplifying_games}
+
+\subfile{sections/surreal_numbers}
+
+\section{One-point Go Endgames}
+
 \subfile{sections/endgame}
+
+\subfile{sections/temperature_theory}
+
+\subfile{sections/positions_analysis}
+
+\section{Conclusion}
 
 \subfile{sections/conclusion}
 

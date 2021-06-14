@@ -5,7 +5,255 @@
 \section{Game of Go}
 
 \subsection{Background}
+Go, also known as \textit{weiqi} (China) or \textit{baduk} (Korea) has been played 
+since at least the 4th century BCE, with its first known appearance in the writings 
+of Chinese scholars. At first an aristocratic pastime, Go has been the subject of 
+professional study since the 17th century when the Tokuguwa dynasty in Japan established 
+a national system of Go schools and tournaments \cite{agahistory}.\\
 
+Go was popularized in the West in the early 20th century by the German engineer Oskar 
+Korschelt, who introduced the game to many contemporary German mathematicians \cite{korschelt2012theory}.\\
+
+Due to its complexity, and reputation as a benchmark for human intelligence,
+Go has long been a major topic of research in mathematics and computer science: the first
+artificial intelligence program for Go was written in 1968, and Deepmind's AlphaGo victory 
+over the top professional human player in 2016 was seen as a major benchmark in the field 
+of artificial intelligence \cite{silver2017mastering}.
+    
 \subsection{Rules of Go}
+
+The following is adapted from the official American Go Association (AGA) rules
+\cite{agarules}. While in almost all case equivalent to the more common Chinese 
+or Japanese rules, some scoring ambiguities in the latter are difficult to mathematize,
+resulting in a more cumbersome theory \cite[Appendix. 1]{berlekamp1994mathematical}. 
+
+\subsubsection{AGA Rules}
+\begin{enumerate}
+\item (The Board) Go is played between two players on grid, often $19\times19$. The board
+is initially empty. 
+\item (Play) Black and White alternate in moving, starting with Black. A move consists
+either of placing a \textit{stone} of one's color on an legal empty intersection of the board, or passing.
+(see rules 3, 4 and 5).
+\item (Capture) 
+\begin{enumerate}
+    \item  A \textit{liberty} of a stone is a vacant, adjacent intersection (horizontally or vertically). 
+    \item Stones of the same color are \textit{connected} if they are adjacent (horizontally or vertically). 
+    \item Stone are part of the same \textit{group} if there are there exists a path between 
+     connected stones of the same color between them. Stones in the same group share liberties.
+    \item After a player moves, any stone or group of stones which is completely surrounded 
+    by stones of the other color, leaving no liberties, is captured and removed from the 
+    board \footnote{Go gets its Chinese name from this game mechanic, \textit{weiqi} means 
+    ``surrounding game''}. 
+    Such stones become \textit{prisoners} of the capturing player. 
+    It is  illegal for a
+    player to move such as to create a group of their own stones that does not have any
+    liberties after any surrounded group of the opposed color are captured.
+\end{enumerate}
+\item (Repeated Board Positions / \textit{Ko}) it is illegal to play 
+a move that recreates a previous full position from the game, with the 
+same player to move
+\item (Passing) On their turn, a player may as their move pass by handing their opponent a stone as a prisoner,
+instead of placing a stone on the board
+\item (Ending the Game) 
+\begin{enumerate} 
+    \item The game ends when Black passes and White's subsequent move is also a pass.
+    \item Any stones which both players agree could not escape capture if the game continued, are removed 
+    from the board and treated as prisoners of the player who could capture them \footnote{In practice, if
+    there is a disagreement, the players
+    can continue playing until said stones are captured. It can be shown that this results in the same score
+    if the stone are    
+    captured using the minimal number of moves. This rule exists to speed up the game such that
+    two skilled players can avoid playing out trivial positions where the result is known ahead of time. 
+    As such, we can ignore this part of the rule in our mathematical treatment of the rules.}.
+\end{enumerate}
+\item (Counting Score) At the end of the game, the score is determined as follows:
+\begin{enumerate} 
+    \item Empty intersections on the board which are entirely surrounded by stones of a single color 
+    are considered \textit{territory} of the player of that color. An empty point is surrounded by stones of a
+    single color if there is no path to a stone of the opposing color from that point by moving only to adjacent
+    empty points.
+    \item (\textit{seki} and \textit{dame}) In some cases, intersections are not completely surrounded by a
+    single color, in which case they do no count as anyone's territory.
+    \item A player's score is given by all the intersection in their territory, less prisoners of their color 
+    held by the opponent. White adds 7.5 points (a \textit{komi}) to their score in compensation for moving 
+    second \footnote{The half-point is added to ensure the game never ends in a draw.}.
+\end{enumerate}
+\end{enumerate}
+
+\subsection{Rule Examples}
+The following illustrates the rules with some partial board positions. In this (and all 
+subsequent figures) a sequence of moves will be numbered (or lettered) in the appropriate 
+order, i.e. move A is played before move B.
+
+\begin{figure}[H]
+\begin{subfigure}[b]{0.45\linewidth}
+\centering
+\begin{psgopartialboard*}{(1,1)(3,4)}
+    \stone{black}{a}{2}
+    \stone{black}{b}{2}
+    \stone{black}{b}{3}
+    
+    \markpos{\marklb{1}}{a}{1}
+    \markpos{\marklb{2}}{b}{1}
+    \markpos{\marklb{3}}{c}{2}
+    \markpos{\marklb{4}}{c}{3}
+    \markpos{\marklb{5}}{b}{4}
+    \markpos{\marklb{6}}{a}{3}
+\end{psgopartialboard*}
+\caption{The black stones form a group which has 6 liberties}
+\end{subfigure}
+\quad
+\begin{subfigure}[b]{0.45\linewidth}
+\centering
+\begin{psgopartialboard*}{(1,1)(3,4)}
+    \stone{black}{a}{3}
+    \stone{black}{b}{3}
+    \stone{black}{b}{1}
+    \stone{white}{a}{2}
+    \stone{white}{a}{1}
+    
+    \move{b}{2}
+\end{psgopartialboard*}
+\caption{Black's move at 0 captures the two white stones}
+\end{subfigure}
+
+\begin{subfigure}[b]{0.45\linewidth}
+\centering
+\begin{psgopartialboard*}{(1,1)(3,4)}
+    \stone{white}{a}{2}
+    \stone{white}{b}{2}
+    \stone{white}{b}{1}
+    
+    \markpos{\marklb{a}}{1}{1}
+\end{psgopartialboard*}
+\caption{Black cannot legally move at \textit{a} since it would immediately be captured by White}
+\end{subfigure}
+\quad 
+\begin{subfigure}[b]{0.45\linewidth}
+\centering
+\begin{psgopartialboard*}{(1,1)(3,4)}
+    \stone{white}{a}{2}
+    \stone{white}{b}{2}
+    \stone{white}{b}{1}
+    \stone{black}{a}{3}
+    \stone{black}{b}{3}
+    \stone{black}{c}{2}
+    \stone{black}{c}{1}
+    \stone[\marklb{A}]{black}{a}{1}
+\end{psgopartialboard*}
+\caption{Black's move at A is legal and captures the white group}
+\end{subfigure}
+
+\begin{subfigure}[b]{0.45\linewidth}
+\centering
+\begin{psgopartialboard*}{(1,1)(4,4)}
+    \stone{white}{b}{3}
+    \stone{white}{a}{2}
+    \stone{white}{b}{1}
+    \stone{black}{c}{3}
+    \stone{black}{d}{2}
+    \stone{black}{c}{1} 
+    \stone[\marklb{A}]{white}{c}{2}
+    \stone[\marklb{B}]{black}{b}{2}
+\end{psgopartialboard*}
+\caption{
+    \textit{Ko}: after Black responds to white move's at A by capturing the stone with a move at B, 
+    White cannot recapture by moving at again at A, unless they play somewhere else on the board first
+}
+\end{subfigure}
+\quad
+\begin{subfigure}[b]{0.45\linewidth}
+\centering
+\begin{psgopartialboard*}{(1,1)(4,4)}
+    \stone{white}{a}{3}
+    \stone{white}{c}{2}
+    \stone{white}{b}{3}
+    \stone{white}{b}{2}
+    \stone{white}{a}{1}
+    \stone{white}{d}{2}
+    \stone{white}{d}{1}
+    \markpos{\markma}{a}{2}
+    \markpos{\markma}{b}{1}
+    \markpos{\markma}{c}{1}
+    
+    \stone{black}{b}{4}
+    \stone{black}{c}{4}
+    \stone{black}{d}{4}
+    \stone{black}{c}{3}
+\end{psgopartialboard*}
+\caption{
+    White has 3 points of territory, marked X. The other intersections are not territory for either player.
+}
+\end{subfigure}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{psgopartialboard*}{(1,1)(5,5)}
+    \stone{black}{a}{1}
+    \stone{black}{a}{2}
+    \stone{black}{a}{3}
+    \stone{black}{b}{3}
+    
+    \stone{black}{d}{1}
+    \stone{black}{d}{2}
+    \stone{black}{d}{3}
+    \stone{black}{d}{4}
+    \stone{black}{c}{4}
+    
+    \stone{white}{a}{4}
+    \stone{white}{b}{4}
+    \stone{white}{c}{1}
+    \stone{white}{c}{2}
+    \stone{white}{c}{3}
+    
+    \markpos{\marklb{a}}{b}{1}
+    \markpos{\marklb{b}}{b}{2}
+\end{psgopartialboard*}
+\caption*{
+    (d) \textit{Seki} (mutual life): If Black plays at \textit{a} White can capture by playing at \textit{b} 
+    and vice versa. Thus, neither the black nor the white group are \textit{dead}, so the intersections 
+    \textit{a,b} are not territory for either player. 
+}
+\end{figure}
+
+Finally, we highlight a fundamental pattern of the game: \textit{two eyes}. 
+Eyes are empty intersections that are surrounded in all
+four directions by stones of the same color. A group with two eyes is uncapturable, 
+since an opponent's move on either eye would be immediately captured, given that the group
+has an ``extra'' liberty (see Rule 3). Such groups are said to be \textit{alive}. 
+
+\begin{figure}[H]
+\centering
+\begin{psgopartialboard*}{(1,1)(5,5)}
+    \stone{white}{a}{1}
+    \stone{white}{b}{2}
+    \stone{white}{a}{3}
+    \stone{white}{b}{3}
+    \stone{white}{c}{2}
+    \stone{white}{c}{1}
+    \markpos{\marklb{a}}{a}{2}
+    \markpos{\marklb{b}}{b}{1}
+    \stone{black}{a}{4}
+    \stone{black}{b}{4}
+    \stone{black}{c}{4}
+    \stone{black}{c}{3}
+    \stone{black}{d}{3}
+    \stone{black}{d}{2}
+    \stone{black}{d}{1}
+\end{psgopartialboard*}
+    \caption*{The White group is alive and  has two eyes at \textit{a} and \textit{b}. 
+    Black cannot capture it.}
+\end{figure}
+
+In practice, competent players will rarely flesh out the full two eyes, instead
+ensuring that they have the possibility of making two eyes if the position is played out. 
+As a convention, we will mark alive groups on diagrams with the symbol $\tau$ (e.g. when 
+the eyes of the group are outside of the diagram). \\
+
+Alive groups are in a sense independent from the rest of the board - no move from the 
+opponent can affect the status of such a group. This fact will be of crucial important 
+in analyzing endgames, where we will be able to argue that sub-positions are independent 
+based on groups being alive.
 
 \end{document}

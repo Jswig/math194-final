@@ -27,12 +27,7 @@ of $G$ respectively. \\
 Many sources such as \cite{berlekamp1994mathematical} write $\{L \mid R\}$ for the ordered pair 
 $(L,R)$. 
 
-\subsubsection{Mathematical Re-formulation of Rules of Go}
-Detail on how this definition is a natural fit for the Game of go. 
-Re-formulation of rules of game for more convenient analysis.
-
-The concept of \textit{numbers} will make this correspondence even simpler.
-
+For instance consider the following Go position. 
 
 \subsection{Conway Induction}
 
@@ -42,30 +37,42 @@ proofs rely on being able to manipulate the recursive structure of games.
 
 \begin{theorem}[Conway Induction]
 \label{induction}
-For $n \geq 1$ let $P(G_1, \ldots, G_n)$ be some property of a $n$-tuple of games 
+For $n \geq 1$ let $P(G_1, \ldots, G_n)$ be a $n$-ary relation on games.
 For all $i \in \{1, \ldots n\}$ suppose $P(G_1, \ldots, G_i', \ldots, G_n)$ implies 
 $P(G_1, \ldots, G_i, \ldots, G_n)$. Then $P(G_1, \ldots, G_n)$ holds for any $n$-tuple 
 of games.
 \end{theorem}
 
 \begin{proof}
-    A contradiction, since by the Descending Game Condition no such infinite sequence 
+    Suppose $P(G_1, \ldots, G_n)$ is false. 
+    (In the general case, making this selection requires the Axiom of Choice,
+    since a game can have infinitely many options).
+    Thus, $\{G_k\}_k$ is an inifinite sequences of games, where $G_{k+1} \in L_k \cup R_k$
+    for all $k$. This is a contradiction, since by the Descending Game Condition no 
+    such infinite sequence exists. 
 \end{proof}
 
 It can be shown that Conway Induction implies the Descending Game Condition \cite{schleicher2006introduction}
 As such, they are equivalent.
 
+\subsection{Winning a Game}
+
+\subsubsection{Mathematical Re-formulation of Rules of Go}
+Detail on how this definition is a natural fit for the Game of go. 
+Re-formulation of rules of game for more convenient analysis.
+
+The concept of \textit{numbers} will make this correspondence even simpler.
+
 \subsection{Arithmetic of Games}
 Games as an algebraic group/ring/field. Illustration of the additive 
 structure of the game of Go
-
 
 Other operations besides addition and negation can be defined on some 
 classes of games (in particular, the class of game introduced in the next section, 
 \textbf{numbers}, forms a field \cite{schleicher2006introduction}),
  but these two operations are the only ones we require in this study of Go endgames. 
 
-\subsection{Surreal Numbers}
+\subsection{Some Useful Surreal Numbers}
 
 \subsubsection{Integers} 
 

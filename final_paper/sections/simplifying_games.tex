@@ -21,6 +21,7 @@ an optimal player will always ignore them.
 \end{definition}
 
 \begin{theorem}[Deleting Dominated Options]
+    \label{dominated}
     Let $G$ be a game with $G^L \in \mathcal{G}^L$ and $G^R \in \mathcal{G}^R$ Then,
     \begin{itemize}
         \item The value of $G$ is unchanged if options of $\mathcal{G}^L$ dominated by $G^L$.
@@ -28,10 +29,6 @@ an optimal player will always ignore them.
     which are dominated by $G^R$ are removed. 
     \end{itemize}
 \end{theorem}
-
-\begin{figure}[H]
-
-\end{figure}
 
 This second result tells us that if the opponent can counter a move with a 
 response that leads to a better positions (for them) than the original, then we 
@@ -73,8 +70,10 @@ possible board positions. \footnote{
     with equal Chinese games in the argument.
 }
 
+By repeatedly deleting dominated options and bypassing, we obtain a unique simpler form 
+of a game.
 \begin{definition}[Canonical Forms]
-    \ref{canonical}
+    \label{canonical}
     In each equivalence class of finite games (under =), there is a unique game that has no dominated
     or reversible options. \\
     This game is called a \textit{canonical form}.

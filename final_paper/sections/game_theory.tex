@@ -145,8 +145,8 @@ The two are thus equivalent (compare to the Well-ordering Principle and inductio
     A player loses the game when it is their turn to move but are unable to do so, i.e. they have
     no legal options.
 \end{definition}
-While it is not immediately apparent how this definition matches the rules
-for determining the winner of a game of G introduced in \S 2, The Normal Play Convention
+While it is not immediately apparent how this definition matches the rules introduced in \S 2
+for determining the winner of a game of Go  The Normal Play Convention
 is preferred to a notion of score since it allows for a theory applicable 
 to a much wider variety of games. We will construct a variant of Go where the winner 
 is determined by the Normal Play Convention, and show how we can recover the normal notion of
@@ -278,8 +278,6 @@ stay the same after pasting (i.e. the positions are independent). This concept i
 to analyzing complex positions, allowing us to break down complex positions into simpler 
 parts (provided they do no affect each other) and recover a global result by taking the sum.
 
-% insert figure showing a sum?
-
 Thus, we define a sum of two games as the game in which players
 can choose to move on either of the two original games, leaving the other game unchanged.
 \begin{definition}[Sums and Differences of Games] Let $G = \{\mathcal{G}_L \mid \mathcal{G}_R\}$
@@ -348,7 +346,7 @@ handy in simplifying arguments on endgames
     \end{enumerate}
 \end{theorem}
 
-\begin{lemma}[Addition Respects Ordering] \: 
+\begin{lemma}[Addition Respects Ordering] \label{addition_ordering} \: 
 \begin{enumerate}
     \item If $G \geq 0$ and $H \geq 0$ then $G+H \geq 0$.
     \item If $G \geq 0$ and $H \triangleright 0$ then $G+H \triangleright 0$.

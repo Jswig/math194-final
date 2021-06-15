@@ -83,7 +83,9 @@ integers interchangeably when analyzing subpositions.
 
 \subsubsection{Rationals}
 
-\begin{definition}[Dyadic Rational] Let $m$ be an odd natural number, and $k$ be a natural 
+\begin{definition}[Dyadic Rational] 
+\label{dyadic}
+Let $m$ be an odd natural number, and $k$ be a natural 
 number. Define \footnote{This construction is slightly cumbersome; this is because 
 here we did show how to define a field on surreal numbers with a division operator.
 Such an approach would make for a lengthy digression from the main results relevant 
@@ -130,10 +132,11 @@ player must give a stone as a prisoner to their opponent - that is, a move effec
 point. The motivation for the chilled game will be made clearer in \S 4.\\
 
 To simplify notation of chilled games, we will introduce the idea of \textit{markings} following 
-\cite{berlekamp1994mathematical}. A filled square indicates a Black prisoner for White, and 
+\cite[\S 4.1]{berlekamp1994mathematical}. A filled square indicates a Black prisoner for White, and 
 a empty square a White prisoner for Black. When a player moves, they either add a marking of
 their color to the board, or remove one of the opponent's color (these both reduce that player's
-net advantage by 1 point). \\
+net advantage by 1 point). Positive numbers of markings will mean Black markings, while a negative
+number of markings will mean White markings.\\
 
 Consider the following position in a chilled game:
 \begin{figure}[H]
@@ -281,9 +284,9 @@ The options of Black and White in this position are respectively
     of 1 point (in Black's favor.)}
     \end{subfigure}
 \end{figure}
-This position is indeed equal to $\{0 | *\} = \uparrow$. $\downarrow$ is the same position with the colors reversed.
+Thus, this position is equal to $\{0 | *\} = \uparrow$. $\downarrow$ is the same position with the colors reversed.
 Similarly, we can obtain $\Uparrow*$ by adding a empty intersection and and marking to the ``corridor'' represented 
-above, $3\uparrow$ by adding another empty intersections and marking, and so on.
+above, $3\uparrow$ by adding another empty intersection and marking, and so on.
 
 The following properties are useful in analyzing positions where infinitesimals appear.
 \begin{theorem}[Properties of Common Infinitesimals] \:

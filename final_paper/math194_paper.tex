@@ -36,12 +36,10 @@
 
 \begin{abstract}
     Combinatorial game theory studies deterministic, perfect-information 
-    games with guaranteed termination. As a perfect-information, symmetric 
-    two-player game, Go is one of the canonical objects of study in the field.
-    While the combinatorial complexity of the game is such that most positions cannot 
-    be solved solved, 
-    many Go endgame positions can be decomposed into simpler objects which can fully
-    analyzed using results from combinatorial game theory
+    two-player games with guaranteed termination. Go is one of the canonical objects of study 
+    in the field, and while the combinatorial complexity of the game is such that most positions cannot 
+    be solved solved, many Go endgame positions can be decomposed into simpler objects which can be
+    analyzed exactly using results from combinatorial game theory.
 \end{abstract}
 
 \newpage
@@ -53,13 +51,20 @@ Izumiya Ichibei, 1849-1851.
 \newpage 
 \section{Introduction}
 
-Go is known for its combinatorial complexity - a lower bound $10^{10^48}$ has 
-been found on the number of possible Go games on a 19$\times$19 board. While this complexity 
-makes it impossible in practice to give exact results in most positions, it also makes 
-the game almost 
+Go is known for its combinatorial complexity - a lower bound $10^{10^{48}}$ has 
+been found on the number of possible Go games on a 19$\times$19 board \cite{senseilower}. 
+Furthermore, during most of a Go game, stones on board are linked by
+ subtle interdependencies which are not easily quantified. As such, it is in practice impossible 
+to determine an optimal move at most stages of the game on any nontrivial board size (in fact, the 
+largest board size to have been fully solved is $5\times5$).
 
-by introducing illustrating the fundamental concepts of the theory immediately 
-with Go positions, I hope to convey how the theory naturally emerges from the rules 
+However, using the tools from combinatorial game theory developed starting in the 1970s,
+namely decomposition into independent position and chilling, exact results can be derived
+for a restricted class of endgame Go problems, providing a decisive advantage over 
+game tree search approaches.
+
+By introducing illustrating the fundamental concepts of the theory immediately 
+with Go positions, this paper attempts to convey how the theory naturally emerges from the rules 
 of Go, despite being applicable to a much wider variety of two-player deterministic
 games. 
 
